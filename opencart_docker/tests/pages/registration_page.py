@@ -30,7 +30,7 @@ class RegistrationPage(BaseComponent):
         self.submit_button = "button[type='submit']"
         self.continue_button = "a.btn-primary:has-text('Continue')"
 
-    def navigate(self) -> None:
+    def navigate_to_reg(self) -> None:
         """Navigate to registration page."""
         self.page.goto(self._full_url or self.rel_url)
 
