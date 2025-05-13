@@ -3,7 +3,7 @@ from typing import Optional
 import pytest
 from playwright.sync_api import BrowserContext, Page
 
-from opencart_docker.tests.pages.base_page import BaseComponent
+from OpenCart.opencart_docker.tests.pages.base_page import BaseComponent
 
 
 class RegistrationPage(BaseComponent):
