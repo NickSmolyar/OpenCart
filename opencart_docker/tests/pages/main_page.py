@@ -22,8 +22,14 @@ class MainPage(BaseComponent):
 
         self.currency_dropdown = page.locator("#form-currency")
         self.currency_dropdown_menu = page.locator("#form-currency .dropdown-menu.show")
-        self.currency_dropdown_menu_item = page.locator(".dropdown-menu .dropdown-item[href='EUR']")
         self.item_cart = page.locator(".btn.dropdown-toggle")
+        self.product_carousel = page.locator("#carousel-banner-0.carousel")
+        self.product_item = page.locator("#content .col")
+
+    def currency_option(self, code: str):
+        return self.page.locator(f".dropdown-menu .dropdown-item[href='{code}']")
+
+
 
 
 
