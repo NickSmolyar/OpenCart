@@ -4,8 +4,8 @@ from faker import Faker
 from playwright.sync_api import Page
 
 from conftest import static_user
-from opencart_docker.tests.pages.login_page import LoginPage
-from opencart_docker.tests.pages.registration_page import RegistrationPage
+from OpenCart.opencart_docker.tests.pages.login_page import LoginPage
+from OpenCart.opencart_docker.tests.pages.registration_page import RegistrationPage
 
 
 @allure.feature('User registration')
