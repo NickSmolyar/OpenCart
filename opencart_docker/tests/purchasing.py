@@ -31,9 +31,10 @@ def test_currency_conversion(page: Page, currency_code, symbol):
     with allure.step('3. Currency changed successfully'):
         dropdown_text = main_page.currency_dropdown.text_content()
         assert symbol in dropdown_text, f"Expected symbol {symbol} in dropdown text: {dropdown_text}"
-        allure.attach(
-            page.screenshot(full_page=True),
-            name="currency conversion",
+        screenshot_path = main_page.make_screenshot("currency_conversion")
+        allure.attach.file(
+            screenshot_path,
+            name="Currency Conversion Screenshot",
             attachment_type=allure.attachment_type.PNG
         )
 
