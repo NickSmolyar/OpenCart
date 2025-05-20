@@ -26,6 +26,7 @@ class LoginPage(BaseComponent):
         self.email_input = "#input-email"
         self.password_input = "#input-password"
         self.login_button = page.locator("button.btn.btn-primary", has_text="Login")
+        self.logout_button = page.locator(".dropdown-menu .dropdown-item", has_text="Logout")
 
     def navigate_to_login(self) -> None:
          self.page.goto(self._full_url or self.rel_url)

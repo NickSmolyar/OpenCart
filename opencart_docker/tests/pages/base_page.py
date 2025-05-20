@@ -1,5 +1,5 @@
 import os
-from datetime import time
+import time
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
