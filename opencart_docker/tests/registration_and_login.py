@@ -79,6 +79,16 @@ def test_user_login_via_login_page(page: Page, static_user):
         )
 
 
+@allure.feature('My account page')
+@allure.story('My account methods test')
+@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.registration
+def test_my_account_page_methods(page: Page, clean_test_users):
+    """Test my account page methods functionality."""
+    
+
+
+
 @allure.feature('User logout')
 @allure.story('Logout user from logged in state')
 @allure.severity(allure.severity_level.NORMAL)
@@ -107,6 +117,9 @@ def  test_user_logout_on_login_page(page: Page, static_user, clean_test_users):
             name="User logout on login page",
             attachment_type=allure.attachment_type.PNG
         )
+
+
+
 
 
 

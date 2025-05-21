@@ -31,7 +31,8 @@ def clean_test_users():
     )
     try:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM oc_customer WHERE email LIKE 'testuser_%@example.com'")
+            cursor.execute("DELETE FROM oc_customer WHERE email LIKE '@example'")
+            cursor.execute("DELETE FROM oc_customer_ip WHERE ip LIKE '172.19.0.1'")
             connection.commit()
     finally:
         connection.close()

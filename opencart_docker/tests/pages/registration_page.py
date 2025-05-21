@@ -3,17 +3,17 @@ from typing import Optional
 import pytest
 from playwright.sync_api import BrowserContext, Page
 
+from OpenCart.opencart_docker.config.urls import REGISTRATION_URL
 from OpenCart.opencart_docker.tests.pages.base_page import BaseComponent
 
 
 class RegistrationPage(BaseComponent):
-    DEFAULT_REGISTRATION_URL = 'http://localhost/index.php?route=account/register&language=en-gb'
     def __init__(
             self,
             context: 'BrowserContext',
             page: 'Page',
             rel_url: str = '',
-            full_url: str = DEFAULT_REGISTRATION_URL,
+            full_url: str = REGISTRATION_URL,
             url_parameters: Optional[str] = None,
             request: Optional['pytest.FixtureRequest'] = None
     ):

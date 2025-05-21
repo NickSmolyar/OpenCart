@@ -42,3 +42,4 @@ def test_currency_conversion(page: Page, currency_code, symbol):
 
 
 
+
