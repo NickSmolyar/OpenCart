@@ -1,13 +1,18 @@
 version: '3.8'
 services:
+  allure:
+    image: frankescobar/allure-docker-service
+    ports:
+      - "5050:5050"
+    volumes:
+      - /c/Users/nsmolyar/opencart_docker/OpenCart/opencart_docker/tests/allure-results:/app/allure-results
+      - /c/Users/nsmolyar/opencart_docker/OpenCart/opencart_docker/allure-report:/app/allure-report
   web:
     build: .
     ports:
       - "80:80"
     depends_on:
       - db
-    # volumes:
-    #   - ./htdocs:/var/www/html
     environment:
       - APACHE_DOCUMENT_ROOT=/var/www/html
 
