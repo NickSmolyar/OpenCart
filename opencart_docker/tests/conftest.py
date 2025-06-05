@@ -45,6 +45,22 @@ def static_user():
         'password': 'randompass',
     }
 
+@pytest.fixture
+def contact_form_user():
+    return {
+        'name': 'user',
+        'email': 'testuser@email.com',
+        'enquiry': 'foo bar baz'
+    }
+
+@pytest.fixture
+def static_with_no_password():
+    return {
+        'name': 'user',
+        'last_name': 'user',
+        'email': 'testuser@email.com',
+    }
+
 
 
 

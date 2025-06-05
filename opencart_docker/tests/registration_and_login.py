@@ -3,6 +3,7 @@ import pytest
 from faker import Faker
 from playwright.sync_api import Page
 
+from OpenCart.opencart_docker.tests.pages.my_account_page import MyAccountPage
 from conftest import static_user
 from OpenCart.opencart_docker.tests.pages.login_page import LoginPage
 from OpenCart.opencart_docker.tests.pages.registration_page import RegistrationPage
@@ -80,13 +81,31 @@ def test_user_login_via_login_page(page: Page, static_user):
 
 
 @allure.feature('My account page')
-@allure.story('My account methods test')
+@allure.story('My account info editing')
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.registration
-def test_my_account_page_methods(page: Page, clean_test_users):
-    """Test my account page methods functionality."""
-    
+def test_edit_my_account_info(page: Page, static_user, static_with_no_password, clean_test_users):
+    """Test my account info editing."""
+    user_data_for_login = static_user
+    user_data_for_edit = static_with_no_password
+    login_page = LoginPage(
+        context=page.context,
+        page=page,
+    )
+    my_account_page = MyAccountPage(
+        context=page.context,
+        page=page,
+    )
+    with allure.step('1. Login user'):
+        login_page.navigate_to_login()
+        login_page.fill_form(**user_data_for_login)
+        login_page.login_button.click()
 
+    with allure.step('2. pass'):
+        my_account_page.edit_account_info.click()
+        my_account_page.fill_form(**user_data_for_edit)
+        my_account_page.submit_form()
+        assert my_account_page.success_alert.is_visible
 
 
 @allure.feature('User logout')

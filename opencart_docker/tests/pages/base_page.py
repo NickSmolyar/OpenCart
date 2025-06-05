@@ -19,7 +19,16 @@ class BaseComponent:
         self.request: Optional['pytest.FixtureRequest'] = request
 
     def make_screenshot(self, name: str = "screenshot", full_page: bool = True):
-        """Take and return screenshot path for current page."""
+        """
+        Takes a screenshot of the current page.
+
+        Args:
+        name (str): Base name of the screenshot file.
+        full_page (bool): Whether to capture the full scrollable page.
+
+        Returns:
+        str: The file path to the saved screenshot.
+        """
         timestamp = time.strftime("%Y%m%d-%H%M%S")
         file_name = f"{name}_{timestamp}.png"
         screenshot_dir = "screenshots"
