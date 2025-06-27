@@ -1,6 +1,5 @@
 import allure
 import pytest
-import self
 
 from playwright.sync_api import Page
 
@@ -24,7 +23,10 @@ def test_user_contact_form(page: Page, contact_form_user):
 
     with allure.step('2. Verify successful enquiry'):
         assert "route=information/contact" in page.url
-        assert success_message.is_visible()
+        assert success_message.is_visible
+
+
+
 
 
 

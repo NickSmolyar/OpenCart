@@ -25,9 +25,21 @@ class MainPage(BaseComponent):
         self.item_cart = page.locator(".btn.dropdown-toggle")
         self.product_carousel = page.locator("#carousel-banner-0.carousel")
         self.product_item = page.locator("#content .col")
+        self.product_description = page.locator("[class*='content'] [class*='description']")
+        self.add_to_cart_button = page.locator("button[type='submit'][title='Add to Cart']")
+        self.success_alert = page.locator("[class*='alert-success']")
+        self.item_cart_dropdown_menu = page.locator("[class*='dropdown-menu'] [class*='table-striped']")
+        self.item_cart_remove_button = page.locator("[class*='btn-danger']")
 
     def currency_option(self, code: str):
         return self.page.locator(f".dropdown-menu .dropdown-item[href='{code}']")
+
+    def click_add_to_cart_by_index(self, index: int = 0):
+        button = self.add_to_cart_button.nth(index)
+        button.wait_for()
+        button.scroll_into_view_if_needed()
+        button.click(force=True)
+
 
 
 

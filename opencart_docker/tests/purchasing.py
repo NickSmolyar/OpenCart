@@ -39,6 +39,39 @@ def test_currency_conversion(page: Page, currency_code, symbol):
         )
 
 
+@allure.feature('Adding item to cart')
+@allure.story('Check functionality of item cart')
+@allure.severity(allure.severity_level.NORMAL)
+@pytest.mark.purchasing
+def test_add_to_cart_functionality(page: Page):
+    main_page = MainPage(
+        context=page.context,
+        page=page,
+    )
+
+    with allure.step('1. Open main page'):
+        page.goto('http://localhost/index.php?route=common/home')
+
+    with allure.step('2. Add item to cart and open it'):
+        main_page.click_add_to_cart_by_index(1)
+        main_page.success_alert.wait_for()
+        assert main_page.success_alert.is_visible
+
+    with allure.step('3. Check item cart status on main page'):
+        main_page.item_cart.click()
+        main_page.item_cart_dropdown_menu.wait_for()
+        text = main_page.item_cart_dropdown_menu.inner_text()
+        assert 'iPhone' in text
+
+    with allure.step('4. Remove item from cart and verify alert'):
+        main_page.item_cart_remove_button.click()
+        main_page.success_alert.wait_for()
+        assert main_page.success_alert.is_visible
+
+
+
+
+
 
 
 
