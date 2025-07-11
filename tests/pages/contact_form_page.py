@@ -25,7 +25,7 @@ class ContactFormPage(BaseComponent):
         self.email_address = "#input-email"
         self.enquiry_form = "#input-enquiry"
 
-        self.submit_button = page.locator("button[type='submit']")
+        self.submit_button = page.locator("button.btn-primary[type='submit']")
 
     def open_contact_form(self) -> None:
          self.page.goto(self._full_url or self.rel_url)
