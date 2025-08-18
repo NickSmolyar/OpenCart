@@ -136,17 +136,3 @@ def  test_user_logout_on_login_page(page: Page, static_user, clean_test_users):
             name="User logout on login page",
             attachment_type=allure.attachment_type.PNG
         )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
