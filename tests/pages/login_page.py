@@ -35,6 +35,9 @@ class LoginPage(BaseComponent):
         self.page.fill(self.email_input, email)
         self.page.fill(self.password_input, password)
 
+    def submit_login(self):
+        self.login_button.click()
+
 
 
 

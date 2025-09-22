@@ -1,12 +1,11 @@
 import allure
 import pytest
-from playwright.sync_api import Page
-
-from config.urls import PRODUCT_CATEGORY_URL
+from playwright.sync_api import Page, expect
 from tests.conftest import contact_form_user
 from tests.pages.contact_form_page import ContactFormPage
+from tests.pages.login_page import LoginPage
 from tests.pages.main_page import MainPage
-from tests.pages.product_category_page import ProductCategoryPage, get_product_by_name, add_product_to_compare
+from tests.pages.product_category_page import ProductCategoryPage
 from tests.pages.unique_item_page import UniqueItemPage
 
 
@@ -50,23 +49,41 @@ def test_carousel_item_opening(page: Page):
         assert "route=common/home" in page.url
 
 
-def test_product_compare(page: Page):
+@pytest.mark.parametrize("product_name", [
+    "Apple Cinema 30",
+    "Canon EOS 5D",
+])
+def test_product_compare(page: Page, static_user, product_name):
+    log_in_page = LoginPage(page.context, page)
     item_page = ProductCategoryPage(page.context, page)
+    user_data_for_login = static_user
 
-    with allure.step('1. Open product category page'):
-        page.goto(PRODUCT_CATEGORY_URL)
+    with allure.step('1. Login to the application'):
+        log_in_page.navigate_to_login()
+        log_in_page.fill_form(**user_data_for_login)
 
-    with allure.step('2. Add product to compare'):
-        apple_product = get_product_by_name(page, 'Apple')
-        add_product_to_compare(page, product_element=apple_product)
+        with page.expect_navigation():
+            log_in_page.submit_login()
 
-        canon_product = get_product_by_name(page, 'Canon')
-        add_product_to_compare(page, product_element=canon_product)
+    with allure.step('2. Navigate to product category page'):
+        page.goto('http://localhost/index.php?route=product/category&language=en-gb&path=20')
+        page.wait_for_load_state('domcontentloaded')
 
-    with allure.step('3. Check if compare page opens'):
+    with allure.step(f'3. Add {product_name} to compare'):
+        item_page.product_list.scroll_into_view_if_needed()
+        item_page.compare_button.scroll_into_view_if_needed()
+
+        product_element = item_page.get_product_by_name(product_name)
+        item_page.add_product_to_compare(product_element=product_element)
+
+        page.wait_for_timeout(1000)
+
+    with allure.step('4. Navigate to compare page and verify'):
         item_page.product_compare_button.click()
-        assert "route=product/compare" in page.url
 
+        page.wait_for_load_state('networkidle')
+        expect(page).to_have_url(lambda url: "route=product/compare" in url)
+        expect(page.locator(f'text="{product_name}"')).to_be_visible()
 
 
 

@@ -1,29 +1,10 @@
 from typing import Optional
 
 import pytest
-from playwright.async_api import BrowserContext, Page
+from playwright.sync_api import BrowserContext, Page, expect
 
 from config.urls import PRODUCT_CATEGORY_URL
 from tests.pages.base_page import BaseComponent
-
-
-def get_product_by_name(page, product_name=None):
-    if product_name:
-        return page.locator('[id="product-list"] [class="product-thumb"] [class="description"]').filter(has_text=product_name)
-    else:
-        return page.locator('[id="product-list"] [class="product-thumb"] [class="description"]').first()
-
-
-def add_product_to_compare(page: Page, **kwargs):
-    product_name = kwargs.get('product_name')
-    product_element = kwargs.get('product_element')
-
-    if product_element:
-        product = product_element
-    elif product_name:
-        product = get_product_by_name(page, product_name)
-    else:
-        raise ValueError("Either product_name or product_element must be provided")
 
 
 class ProductCategoryPage(BaseComponent):
@@ -37,6 +18,7 @@ class ProductCategoryPage(BaseComponent):
             request: Optional['pytest.FixtureRequest'] = None
     ):
         super().__init__(context, page, request)
+        self.page = page   # store the Playwright page instance
         self.rel_url = rel_url
         self._full_url = full_url or ""
         self._url_parameters = url_parameters
@@ -45,3 +27,35 @@ class ProductCategoryPage(BaseComponent):
         self.compare_button = page.locator('[data-bs-original-title="Compare this Product"]')
         self.compare_added_popup = page.locator('[class ="alert alert-success alert-dismissible"]')
         self.product_compare_button = page.locator('[id="compare-total"]')
+        self.product_list = page.locator('[id="product-list"]')
+
+    def get_product_by_name(self, product_name: str):
+        all_products = self.page.locator('.product-thumb .description h4 a')
+
+        self.page.wait_for_function(
+            "document.querySelectorAll('.product-thumb .description h4 a').length > 0"
+        )
+
+        count = all_products.count()
+        for i in range(count):
+            product = all_products.nth(i)
+            product_text = product.text_content()
+
+            if product_text and product_name.lower() in product_text.lower():
+                return product
+
+        raise ValueError(f"Product '{product_name}' not found on the page")
+
+    def add_product_to_compare(self, *, product_name: str = None, product_element=None):
+        if not product_element and not product_name:
+            raise ValueError("Either product_name or product_element must be provided")
+
+        if product_element:
+            product = product_element
+        else:
+            product = self.get_product_by_name(product_name)
+
+        product_container = product.locator(
+            "xpath=ancestor::div[contains(@class,'product-thumb')]"
+        ).first
+        product_container.scroll_into_view_if_needed()
