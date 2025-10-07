@@ -24,7 +24,7 @@ class ProductCategoryPage(BaseComponent):
         self._url_parameters = url_parameters
 
         self.product_item = page.locator('[id="product-list"] [class="product-thumb"]')
-        self.compare_button = page.locator('[data-bs-original-title="Compare this Product"]')
+        # self.compare_button = page.locator('[formaction="http://localhost/index.php?route=product/compare.add&language=en-gb"]')
         self.compare_added_popup = page.locator('[class ="alert alert-success alert-dismissible"]')
         self.product_compare_button = page.locator('[id="compare-total"]')
         self.product_list = page.locator('[id="product-list"]')
@@ -46,16 +46,12 @@ class ProductCategoryPage(BaseComponent):
 
         raise ValueError(f"Product '{product_name}' not found on the page")
 
-    def add_product_to_compare(self, *, product_name: str = None, product_element=None):
-        if not product_element and not product_name:
-            raise ValueError("Either product_name or product_element must be provided")
-
-        if product_element:
-            product = product_element
-        else:
-            product = self.get_product_by_name(product_name)
-
-        product_container = product.locator(
-            "xpath=ancestor::div[contains(@class,'product-thumb')]"
+    def add_product_to_compare(self, product_name:str):
+        compare_button = self.page.locator(
+            f'.product-thumb:has-text("{product_name}") '
+            '[formaction="http://localhost/index.php?route=product/compare.add&language=en-gb"]'
         ).first
-        product_container.scroll_into_view_if_needed()
+        compare_button.wait_for(state="visible", timeout=5000)
+        compare_button.scroll_into_view_if_needed()
+        compare_button.click()
+

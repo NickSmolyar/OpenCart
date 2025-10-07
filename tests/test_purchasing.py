@@ -8,6 +8,8 @@ from tests.pages.main_page import MainPage
 @allure.story('Check currency conversion')
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.purchasing
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 @pytest.mark.parametrize("currency_code,symbol", [
     ("EUR", "€"),
     ("GBP", "£"),
@@ -43,6 +45,8 @@ def test_currency_conversion(page: Page, currency_code, symbol):
 @allure.story('Check functionality of item cart')
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.purchasing
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_add_to_cart_functionality(page: Page):
     main_page = MainPage(
         context=page.context,

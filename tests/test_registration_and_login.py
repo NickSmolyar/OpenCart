@@ -13,6 +13,8 @@ from tests.pages.registration_page import RegistrationPage
 @allure.story('Register new user with valid credentials')
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.registration
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_user_registration_via_main(page: Page, clean_test_users):
     """Test successful user registration with valid credentials."""
     fake = Faker()
@@ -54,6 +56,8 @@ def test_user_registration_via_main(page: Page, clean_test_users):
 @allure.story('Login user with valid credentials')
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.registration
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_user_login_via_login_page(page: Page, static_user):
     """Test successful user login with valid credentials."""
     user_data = static_user
@@ -84,6 +88,8 @@ def test_user_login_via_login_page(page: Page, static_user):
 @allure.story('My account info editing')
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.registration
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_edit_my_account_info(page: Page, static_user, static_with_no_password, clean_test_users):
     """Test my account info editing."""
     user_data_for_login = static_user
@@ -112,6 +118,8 @@ def test_edit_my_account_info(page: Page, static_user, static_with_no_password, 
 @allure.story('Logout user from logged in state')
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.registration
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def  test_user_logout_on_login_page(page: Page, static_user, clean_test_users):
     """Test successful user logout from logged in state."""
     user_data = static_user

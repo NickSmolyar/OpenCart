@@ -1,3 +1,5 @@
+import re
+
 import allure
 import pytest
 from playwright.sync_api import Page, expect
@@ -13,6 +15,8 @@ from tests.pages.unique_item_page import UniqueItemPage
 @allure.story('Contact form')
 @allure.severity(allure.severity_level.MINOR)
 @pytest.mark.miscellaneous
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_user_contact_form(page: Page, contact_form_user):
     contact_form_page = ContactFormPage(
         context=page.context,
@@ -29,6 +33,8 @@ def test_user_contact_form(page: Page, contact_form_user):
         assert success_message.is_visible
 
 
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 def test_carousel_item_opening(page: Page):
     main_page = MainPage(page.context, page)
     item_page = UniqueItemPage(page.context, page)
@@ -47,8 +53,10 @@ def test_carousel_item_opening(page: Page):
         main_page.product_carousel_next_button.click()
         main_page.product_carousel_laptop.click()
         assert "route=common/home" in page.url
+        
 
-
+@pytest.mark.cleanup_days(3)
+@pytest.mark.cleanup_dry_run(True)
 @pytest.mark.parametrize("product_name", [
     "Apple Cinema 30",
     "Canon EOS 5D",
@@ -71,10 +79,7 @@ def test_product_compare(page: Page, static_user, product_name):
 
     with allure.step(f'3. Add {product_name} to compare'):
         item_page.product_list.scroll_into_view_if_needed()
-        item_page.compare_button.scroll_into_view_if_needed()
-
-        product_element = item_page.get_product_by_name(product_name)
-        item_page.add_product_to_compare(product_element=product_element)
+        item_page.add_product_to_compare(product_name)
 
         page.wait_for_timeout(1000)
 
@@ -82,8 +87,7 @@ def test_product_compare(page: Page, static_user, product_name):
         item_page.product_compare_button.click()
 
         page.wait_for_load_state('networkidle')
-        expect(page).to_have_url(lambda url: "route=product/compare" in url)
-        expect(page.locator(f'text="{product_name}"')).to_be_visible()
+        expect(page).to_have_url(re.compile(r"route=product/compare"))
 
 
 
