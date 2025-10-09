@@ -24,27 +24,9 @@ class ProductCategoryPage(BaseComponent):
         self._url_parameters = url_parameters
 
         self.product_item = page.locator('[id="product-list"] [class="product-thumb"]')
-        # self.compare_button = page.locator('[formaction="http://localhost/index.php?route=product/compare.add&language=en-gb"]')
         self.compare_added_popup = page.locator('[class ="alert alert-success alert-dismissible"]')
         self.product_compare_button = page.locator('[id="compare-total"]')
         self.product_list = page.locator('[id="product-list"]')
-
-    def get_product_by_name(self, product_name: str):
-        all_products = self.page.locator('.product-thumb .description h4 a')
-
-        self.page.wait_for_function(
-            "document.querySelectorAll('.product-thumb .description h4 a').length > 0"
-        )
-
-        count = all_products.count()
-        for i in range(count):
-            product = all_products.nth(i)
-            product_text = product.text_content()
-
-            if product_text and product_name.lower() in product_text.lower():
-                return product
-
-        raise ValueError(f"Product '{product_name}' not found on the page")
 
     def add_product_to_compare(self, product_name:str):
         compare_button = self.page.locator(
@@ -54,4 +36,13 @@ class ProductCategoryPage(BaseComponent):
         compare_button.wait_for(state="visible", timeout=5000)
         compare_button.scroll_into_view_if_needed()
         compare_button.click()
+
+    def add_product_to_wishlist(self, product_name:str):
+        wishlist_button = self.page.locator(
+            f'.product-thumb:has-text("{product_name}") '
+            '[formaction="http://localhost/index.php?route=account/wishlist.add&language=en-gb"]'
+        ).first
+        wishlist_button.wait_for(state="visible", timeout=5000)
+        wishlist_button.scroll_into_view_if_needed()
+        wishlist_button.click()
 
