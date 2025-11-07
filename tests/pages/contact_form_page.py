@@ -1,36 +1,51 @@
 from typing import Optional
-
 import pytest
-from playwright.async_api import BrowserContext, Page
+from playwright.sync_api import BrowserContext, Page
 
-from config.urls import CONTACT_FORM_URL
-from tests.pages.base_page import BaseComponent
+from config.urls import URLs
+from tests.pages.base_component import BaseComponent
+
 
 class ContactFormPage(BaseComponent):
+    NAME_INPUT = "#input-name"
+    EMAIL_INPUT = "#input-email"
+    ENQUIRY_TEXTAREA = "#input-enquiry"
+    SUBMIT_BUTTON = "button.btn-primary[type='submit']"
+
     def __init__(
             self,
-            context: 'BrowserContext',
-            page: 'Page',
-            rel_url: str = '',
-            full_url: str = CONTACT_FORM_URL,
-            url_parameters: Optional[str] = None,
-            request: Optional['pytest.FixtureRequest'] = None
+            context: BrowserContext,
+            page: Page,
+            request: Optional[pytest.FixtureRequest] = None
     ):
         super().__init__(context, page, request)
-        self.rel_url = rel_url
-        self._full_url = full_url or ""
-        self._url_parameters = url_parameters
-
-        self.name_input = "#input-name"
-        self.email_address = "#input-email"
-        self.enquiry_form = "#input-enquiry"
-
-        self.submit_button = page.locator("button.btn-primary[type='submit']")
+        self.url = URLs.CONTACT_FORM
 
     def open_contact_form(self) -> None:
-         self.page.goto(self._full_url or self.rel_url)
+        self.page.goto(self.url)
 
     def fill_contact_form(self, name: str, email: str, enquiry: str) -> None:
-        self.page.fill(self.name_input, name)
-        self.page.fill(self.email_address, email)
-        self.page.fill(self.enquiry_form, enquiry)
+        self.page.fill(self.NAME_INPUT, name)
+        self.page.fill(self.EMAIL_INPUT, email)
+        self.page.fill(self.ENQUIRY_TEXTAREA, enquiry)
+
+    def click_submit(self) -> None:
+        self.page.click(self.SUBMIT_BUTTON)
+
+    def fill_name(self, name: str) -> None:
+        self.page.fill(self.NAME_INPUT, name)
+
+    def fill_email(self, email: str) -> None:
+        self.page.fill(self.EMAIL_INPUT, email)
+
+    def fill_enquiry(self, enquiry: str) -> None:
+        self.page.fill(self.ENQUIRY_TEXTAREA, enquiry)
+
+    def get_name_value(self) -> str:
+        return self.page.input_value(self.NAME_INPUT)
+
+    def get_email_value(self) -> str:
+        return self.page.input_value(self.EMAIL_INPUT)
+
+    def get_enquiry_value(self) -> str:
+        return self.page.input_value(self.ENQUIRY_TEXTAREA)
