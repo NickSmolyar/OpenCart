@@ -3,8 +3,8 @@ from typing import Optional
 import pytest
 from playwright.sync_api import BrowserContext, Page
 
-from config.urls import MY_ACCOUNT_URL
-from tests.pages.base_page import BaseComponent
+from config.urls import URLs
+from tests.pages.base_component import BaseComponent
 
 
 class MyAccountPage(BaseComponent):
@@ -14,17 +14,12 @@ class MyAccountPage(BaseComponent):
     """
     def __init__(
             self,
-            context: 'BrowserContext',
-            page: 'Page',
-            rel_url: str = '',
-            full_url: str = MY_ACCOUNT_URL,
-            url_parameters: Optional[str] = None,
-            request: Optional['pytest.FixtureRequest'] = None
+            context: BrowserContext,
+            page: Page,
+            request: Optional[pytest.FixtureRequest] = None
     ):
         super().__init__(context, page, request)
-        self.rel_url = rel_url
-        self._full_url = full_url or ""
-        self._url_parameters = url_parameters
+        self.url = URLs.MY_ACCOUNT
 
         #My account section
         self.edit_account_info = page.locator('.list-unstyled a[href*="route=account/edit"]')
@@ -46,17 +41,19 @@ class MyAccountPage(BaseComponent):
         self.account_newsletter = page.locator('.list-unstyled a[href*="route=account/newsletter"]')
 
         #Generic fields
-        self.name_input = "#input-firstname"
-        self.last_name = "#input-lastname"
-        self.email_input = "#input-email"
-        self.continue_button = ".btn-primary"
+        self.account_name_input = page.locator("#input-firstname")
+        self.account_last_name = page.locator("#input-lastname")
+        self.account_email_input = page.locator("#input-email")
+        self.continue_button = page.locator(".btn-primary")
         self.success_alert = page.locator(".alert alert-success alert-dismissible")
 
+    def open_my_account_page(self) -> None:
+        self.page.goto(self.url)
+
     def fill_form(self, name: str, last_name: str, email: str) -> None:
-        """Fill registration form."""
-        self.page.fill(self.name_input, name)
-        self.page.fill(self.last_name, last_name)
-        self.page.fill(self.email_input, email)
+        self.account_name_input.fill(name)
+        self.account_last_name.fill(last_name)
+        self.account_email_input.fill(email)
 
     def submit_form(self) -> None:
-        self.page.click(self.continue_button)
+        self.continue_button.click()
