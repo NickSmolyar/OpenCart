@@ -99,22 +99,3 @@ def test_product_search(context, page, static_user):
 
     with allure.step('3. Verify search results'):
         expect(page).to_have_url(re.compile(r"search=Iphone"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
